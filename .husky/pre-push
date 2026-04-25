@@ -1,0 +1,20 @@
+#!/bin/sh
+
+branch_name=$(git symbolic-ref --short HEAD)
+
+# Skip validation for the "main" branch
+if [ "$branch_name" = "dev" ] || [ "$branch_name" = "main" ]; then
+  exit 0
+fi
+
+# Validate branch naming convention
+if [[ ! "$branch_name" =~ ^cs-[0-9]+(-[a-zA-Z0-9]+)+$ ]]; then
+  echo ""
+  echo "❌ Branch name '$branch_name' is invalid."
+  echo "✅ It should match: cs-<number>-<dashed-description>"
+  echo " Example: cs-340-fix-issue-related-to-profile"
+  echo ""
+  exit 1
+fi
+
+exit 0

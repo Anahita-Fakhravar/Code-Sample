@@ -1,0 +1,52 @@
+commit_msg_file=$1
+commit_msg=$(cat "$commit_msg_file")
+# Max header length
+max_length=200
+# Allowed types
+allowed_types=("build" "feat" "fix" "docs" "style" "refactor" "test"
+"revert" "chore" "ci" "wip")
+# Extract type, scope, and subject from commit message (format: type(scope): subject)
+if [[ "$commit_msg" =~ ^([a-z]+)(\([a-z0-9-]+\))?\:\ (.+)$ ]]; then
+type="${BASH_REMATCH[1]}"
+subject="${BASH_REMATCH[3]}"
+else
+echo "❌ Invalid commit message format."
+echo " Expected format: type(scope): subject"
+echo " Example: feat(profile): add profile image upload"
+exit 1
+fi
+
+# Check type is allowed
+if [[ ! " ${allowed_types[*]} " =~ " $type " ]]; then
+echo "❌ Invalid type: '$type'"
+echo " Allowed types: ${allowed_types[*]}"
+exit 1
+fi
+
+# Check type is lowercase
+if [[ "$type" != "${type,,}" ]]; then
+echo "❌ Type must be lowercase: '$type'"
+exit 1
+fi
+
+# Check subject is not empty
+if [[ -z "$subject" ]]; then
+echo "❌ Subject must not be empty."
+exit 1
+fi
+
+# Check subject doesn't end with a full stop
+if [[ "$subject" =~ \.$ ]]; then
+echo "❌ Subject should not end with a period."
+exit 1
+fi
+
+# Check header (first line) max length
+header_length=${#commit_msg}
+if (( header_length > max_length )); then
+echo "❌ Commit message header is too long ($header_length characters).
+Max allowed: $max_length"
+exit 1
+fi
+echo "✅ Commit message validated."
+exit 0

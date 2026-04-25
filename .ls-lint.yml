@@ -1,0 +1,15 @@
+ls:
+  src:
+
+  .ts: regex:[a-z0-9-]+(\.[a-z]+)?(\.spec)? | regex:[a-z0-9-]+(\.[a-z]+)?(\.mock)? | regex:[a-z0-9-]+(\.[a-z]+)?(\.hook)? | regex:[a-z0-9-]+(\.[a-z]+)?(\.provider)? | regex:[a-z0-9-]+(\.modal)?
+
+  .d.ts: regex:[a-z0-9-]+(\.[a-z]+)?(\.spec)? | regex:[a-z0-9-]+(\.[a-z]+)?(\.mock)?
+
+ignore:
+  - .git
+  - node_modules
+  - dist
+  - build
+  - .husky
+  - .vscode
+  - .env
