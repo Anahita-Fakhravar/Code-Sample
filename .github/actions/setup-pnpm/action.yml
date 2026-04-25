@@ -1,0 +1,29 @@
+name: 'Setup Node + pnpm'
+description: 'Sets up Node.js, enables Corepack, and installs dependencies with pnpm'
+
+inputs:
+  node-version:
+    description: 'Node.js version'
+    required: false
+    default: '22'
+
+runs:
+  using: 'composite'
+
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: pnpm
+
+    - name: Enable Corepack
+      shell: bash
+      run: corepack enable
+
+    - name: Activate pnpm
+      shell: bash
+      run: corepack prepare pnpm@10 --activate
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile
