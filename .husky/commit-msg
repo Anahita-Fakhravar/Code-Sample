@@ -23,12 +23,6 @@ echo " Allowed types: ${allowed_types[*]}"
 exit 1
 fi
 
-# Check type is lowercase
-if [[ "$type" != "${type,,}" ]]; then
-echo "❌ Type must be lowercase: '$type'"
-exit 1
-fi
-
 # Check subject is not empty
 if [[ -z "$subject" ]]; then
 echo "❌ Subject must not be empty."

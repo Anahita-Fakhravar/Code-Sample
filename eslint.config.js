@@ -4,13 +4,14 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
-import react from 'eslint-plugin-react';
+import eslintReact from '@eslint-react/eslint-plugin';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import parser from '@typescript-eslint/parser';
 import prettier from 'eslint-plugin-prettier';
 import unusedImports from 'eslint-plugin-unused-imports';
 import importPlugin from 'eslint-plugin-import';
 import typescript from '@typescript-eslint/eslint-plugin';
+import reactHooksExtra from 'eslint-plugin-react-hooks-extra';
 
 export default defineConfig([
   globalIgnores([
@@ -30,26 +31,42 @@ export default defineConfig([
       tseslint.configs.recommended,
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
+      eslintReact.configs['recommended-typescript'],
     ],
     languageOptions: {
       parser,
-      ecmaVersion: 2020,
+      ecmaVersion: 'latest',
       globals: globals.browser,
       sourceType: 'module',
     },
     plugins: {
       'react-hooks': reactHooks,
+      'react-hooks-extra': reactHooksExtra,
       prettier,
       'unused-imports': unusedImports,
       import: importPlugin,
       '@typescript-eslint': typescript,
-      react,
     },
     rules: {
+      // React Hooks
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': 'off',
+
+      // React Hooks Extra
+      'react-hooks-extra/no-direct-set-state-in-use-effect': 'warn',
+
+      // React Refresh — warn instead of off, allow constant exports (TanStack Router pattern)
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+
+      // Prettier
       'prettier/prettier': 'error',
+
+      // Unused imports
       'unused-imports/no-unused-imports': 'error',
+
+      // Import order
       'import/order': [
         'error',
         {
@@ -84,13 +101,26 @@ export default defineConfig([
           },
         },
       ],
+
+      // TypeScript
       '@typescript-eslint/no-unused-vars': [
         'error',
         { vars: 'all', args: 'after-used', ignoreRestSiblings: true },
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
-      'react/jsx-no-useless-fragment': ['warn', { allowExpressions: true }],
-      'react/no-unstable-nested-components': ['warn', { allowAsProps: true }],
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { prefer: 'type-imports' },
+      ],
+
+      // Modern React rules (replaces eslint-plugin-react)
+      '@eslint-react/jsx-no-useless-fragment': 'warn',
+      '@eslint-react/no-nested-component-definitions': 'warn',
+      '@eslint-react/dom-no-dangerously-set-innerhtml': 'error',
+      '@eslint-react/dom-no-unknown-property': 'error',
+
+      // No console logs in production code
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
   },
   {
