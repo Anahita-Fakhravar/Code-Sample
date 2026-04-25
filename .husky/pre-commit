@@ -1,0 +1,4 @@
+pnpm circular-check \
+  && pnpm ls-lint \
+  && pnpm ts:check \
+  && pnpm lint-staged
