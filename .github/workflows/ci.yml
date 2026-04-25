@@ -12,46 +12,31 @@ concurrency:
 
 jobs:
   lint:
-    name: Lint and Formatting
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-
       - uses: ./.github/actions/setup-pnpm
 
-      - name: Lint
-        run: pnpm lint
-
-      - name: Format check
-        run: pnpm format:check
-
-      - name: Dependency lint
-        run: pnpm ls-lint
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm ls-lint
 
   typecheck:
-    name: Type and Dependency Checks
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-
       - uses: ./.github/actions/setup-pnpm
 
-      - name: Type check
-        run: pnpm ts:check
-
-      - name: Circular dependency check
-        run: pnpm circular-check
+      - run: pnpm ts:check
+      - run: pnpm circular-check
 
   build:
-    name: Production Build
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-
       - uses: ./.github/actions/setup-pnpm
 
-      - name: Build
-        run: pnpm build
+      - run: pnpm build

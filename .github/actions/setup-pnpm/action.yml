@@ -1,5 +1,5 @@
 name: 'Setup Node + pnpm'
-description: 'Sets up Node.js, enables Corepack, and installs dependencies with pnpm'
+description: 'Sets up Node.js, Corepack, and pnpm correctly'
 
 inputs:
   node-version:
@@ -14,7 +14,6 @@ runs:
     - uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
-        cache: pnpm
 
     - name: Enable Corepack
       shell: bash
@@ -23,6 +22,10 @@ runs:
     - name: Activate pnpm
       shell: bash
       run: corepack prepare pnpm@10 --activate
+
+    - name: Verify pnpm
+      shell: bash
+      run: pnpm -v
 
     - name: Install dependencies
       shell: bash
